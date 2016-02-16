@@ -8,11 +8,6 @@ include 'FcgiClient.php';
 class Master
 {
 
-    private static $connections = array();
-    private static $buffers = array();
-    private static $remote_address = array();
-
-
     //可使用最大内存
     private $memoryLimit = '1024M';
     //默认子进程数
@@ -36,68 +31,6 @@ class Master
     public function start($port)
     {
 //        error_log("14\n",3,'/tmp/mytest');
-
-        $socket = stream_socket_server ('tcp://0.0.0.0:' . $port, $errno, $errstr);
-        stream_set_blocking($socket, 0);
-        //创建并且初始事件
-        $base = event_base_new();
-        //创建一个新的事件
-        $event = event_new();
-        //准备想要在event_add中添加事件
-        event_set($event, $socket, EV_READ | EV_PERSIST, array(__CLASS__, 'ev_accept'), $base);
-        //关联事件到事件base
-        event_base_set($event, $base);
-        //向指定的设置中添加一个执行事件
-        event_add($event);
-        //处理事件，根据指定的base来处理事件循环
-        event_base_loop($base);
-
-    }
-
-    public function ev_accept($socket, $flag, $base)
-    {
-
-        static $id = 0;
-        $connection = stream_socket_accept($socket);
-        stream_set_blocking($connection, 0);
-
-        $id += 1;
-        //建立一个新的缓存事件
-        $buffer = event_buffer_new($connection, array(__CLASS__, 'ev_read'), NULL, array(__CLASS__, 'ev_error'),  $id);
-        //关联缓存的事件到event_base
-        event_buffer_base_set($buffer, $base);
-        //给一个缓存的事件设定超时的读写时间
-        event_buffer_timeout_set($buffer, 30, 30);
-        //设置读写事件的水印标记
-        event_buffer_watermark_set($buffer, EV_READ, 0, 0xffffff);
-        //缓存事件的优先级设定
-        event_buffer_priority_set($buffer, 10);
-        //启用一个指定的缓存的事件
-        event_buffer_enable($buffer, EV_READ | EV_PERSIST);
-
-        self::$connections[$id] = $connection;
-        self::$buffers[$id] = $buffer;
-    }
-
-    public function ev_read($buffer, $id)
-    {
-        echo 111;exit;
-    }
-
-    public function ev_error($buffer, $error, $id)
-    {
-        event_buffer_disable(self::$buffers[$id], EV_READ | EV_WRITE);
-        event_buffer_free(self::$buffers[$id]);
-        fclose(self::$connections[$id]);
-        unset(self::$buffers[$id], self::$connections[$id]);
-    }
-
-
-
-/*
-    public function start($port)
-    {
-//        error_log("14\n",3,'/tmp/mytest');
         $socket = stream_socket_server ('tcp://0.0.0.0:' . $port, $errno, $errstr);
         stream_set_blocking($socket, 0);
 
@@ -117,7 +50,7 @@ class Master
             sleep(mt_rand(3, 5));//防止100%占用
         }
     }
-*/
+
 
     /**
      * 设置信号

@@ -54,7 +54,6 @@ class Worker
 
     private function ev_read($buffer, $id)
     {
-        echo 11;exit;
 //        static $ct = 0;
 //        $ct_last = $ct;
         $ct_data = '';
