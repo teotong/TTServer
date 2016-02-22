@@ -29,6 +29,7 @@ if ($_SERVER['argc']<2) {
     echo "Ex: ".$_SERVER['argv'][0]." unix:/var/run/php-fpm/web.sock/status\n";
     exit(1);
 }
+
 if (preg_match('|^unix:(.*.sock)(/.*)$|', $_SERVER['argv'][1], $reg)) {
     $url  = parse_url($reg[2]);
     $sock = $reg[1];
@@ -52,11 +53,6 @@ if (isset($url['query'])) {
     $url['query'] = '';
     $uri = $req;
 }
-//var_dump($req);
-//var_dump($uri);exit;
-
-
-
 if ($sock) {
     $client = new Client("unix://$sock", -1);
     echo "Call: $uri on UDS $sock\n\n";
@@ -85,6 +81,6 @@ $params = array(
 		'CONTENT_TYPE'      => '',
 		'CONTENT_LENGTH'    => 0
 );
-//print_r($params);exit;
+//print_r($params);
 echo $client->request($params, false)."\n";
 
