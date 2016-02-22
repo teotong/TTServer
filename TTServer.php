@@ -1,10 +1,18 @@
 #!/usr/bin/env php
 <?php
-$config = parse_ini_file($argv[1], true);
-//print_r($config);exit;
+namespace TTServer;
+
+if (!is_readable('vendor')) {
+    die('please composer install frist');
+}
 require 'vendor/autoload.php';
 require 'Master.php';
 
+if(!isset($argv[1]) && empty($argv[1])) {
+    die('参数错误');
+}
+$config = parse_ini_file($argv[1], true);
+//print_r($config);exit;
 $server = new Master($config);
 $server->start();
 

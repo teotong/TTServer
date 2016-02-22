@@ -82,8 +82,8 @@ class Http
               'REQUEST_METHOD' => '',
               'REQUEST_URI' => '',
               'SERVER_PROTOCOL' => '',
-              'SERVER_SOFTWARE' => 'workerman/3.0',
-              'SERVER_NAME' => '', 
+              'SERVER_SOFTWARE' => 'TTServer/1.0',  //Transfers by workerman/3.0
+              'SERVER_NAME' => '',
               'HTTP_HOST' => '',
               'HTTP_USER_AGENT' => '',
               'HTTP_ACCEPT' => '',
